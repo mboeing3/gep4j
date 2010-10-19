@@ -21,13 +21,14 @@ import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.gep4j.GepFactory;
+import org.gep4j.GeneFactory;
 import org.gep4j.INode;
 import org.gep4j.INodeFactory;
 import org.gep4j.KarvaEvaluator;
 import org.gep4j.MutationOperator;
 import org.gep4j.RecombinationOperator;
 import org.gep4j.SimpleNodeFactory;
+import org.gep4j.tree.IntegerDecisionNodeFactory;
 import org.gep4j.tree.NominalNode;
 import org.gep4j.tree.NominalTerminalFactory;
 import org.uncommons.maths.random.MersenneTwisterRNG;
@@ -53,8 +54,8 @@ public class MixedDecisionTreeExample {
 	public INode[] bestIndividual=null;
 	DefaultTableModel data;
 	private NominalNode outlook;
-	private NominalNode tempurature;
-	private NominalNode humidity;
+	private ThreadLocal<Integer> tempurature;
+	private ThreadLocal<Integer> humidity;
 	private NominalNode windy;
 	
 	private void go() {
@@ -79,17 +80,18 @@ public class MixedDecisionTreeExample {
 		List<INodeFactory> factories = new ArrayList<INodeFactory>();
 
 		outlook = new NominalNode("Outlook", new String[] {"sunny", "overcast", "rainy"});
-		tempurature = new NominalNode("Tempurature", new String[] {"hot", "mild", "cool"});
-		humidity = new NominalNode("Humidity", new String[] {"high", "normal"});
+		tempurature = new ThreadLocal<Integer>();
+		humidity = new ThreadLocal<Integer>();
 		windy = new NominalNode("Windy", new String[] {"false", "true"});
 		
+		 
 		factories.add(new SimpleNodeFactory(outlook));
-		factories.add(new SimpleNodeFactory(tempurature));
-		factories.add(new SimpleNodeFactory(humidity));
+		factories.add(new IntegerDecisionNodeFactory("tempurature", 63, 86, tempurature));
+		factories.add(new IntegerDecisionNodeFactory("humidity", 64, 96, humidity));
 		factories.add(new SimpleNodeFactory(windy));
 		factories.add(new NominalTerminalFactory(new Object[] {"No", "Yes"}));
 
-		GepFactory factory = new GepFactory(factories, GENE_SIZE);
+		GeneFactory factory = new GeneFactory(factories, GENE_SIZE);
 
 		List<EvolutionaryOperator<INode[]>> operators = new ArrayList<EvolutionaryOperator<INode[]>>();
 		operators.add(new MutationOperator<INode[]>(factory, new Probability(0.2d)));
@@ -132,8 +134,8 @@ public class MixedDecisionTreeExample {
 		double error = 0;
 		for (int i=0; i<data.getRowCount(); i++) {
 			outlook.setValue(data.getValueAt(i, OUTLOOK));
-			tempurature.setValue(data.getValueAt(i, TEMP));
-			humidity.setValue(data.getValueAt(i, HUMIDITY));
+			tempurature.set((Integer) data.getValueAt(i, TEMP));
+			humidity.set((Integer) data.getValueAt(i, HUMIDITY));
 			windy.setValue(data.getValueAt(i, WINDY));
 			String result = (String) karvaEvaluator.evaluate(ind);
 			error += result.equals(data.getValueAt(i, PLAY)) ? 0.0 : 1.0;

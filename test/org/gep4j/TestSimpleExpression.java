@@ -4,7 +4,7 @@ package org.gep4j;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.gep4j.GepFactory;
+import org.gep4j.GeneFactory;
 import org.gep4j.INode;
 import org.gep4j.INodeFactory;
 import org.gep4j.IntegerConstantFactory;
@@ -44,7 +44,7 @@ public class TestSimpleExpression {
 		factories.add(new SimpleNodeFactory(new Divide()));
 		factories.add(new IntegerConstantFactory(-100000, 100000));
 
-		GepFactory factory = new GepFactory(factories, 20);
+		GeneFactory factory = new GeneFactory(factories, 20);
 
 		List<EvolutionaryOperator<INode[]>> operators = new ArrayList<EvolutionaryOperator<INode[]>>();
 		operators.add(new MutationOperator<INode[]>(factory, new Probability(0.01d)));

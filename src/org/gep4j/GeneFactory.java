@@ -16,14 +16,14 @@
  */
 package org.gep4j;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
 import java.util.Random;
 
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 
-public class GepFactory extends AbstractCandidateFactory<INode[]> implements IMutator<INode[]>, IRecombiner<INode[]> {
+public class GeneFactory extends AbstractCandidateFactory<INode[]> implements IMutator<INode[]>, IRecombiner<INode[]> {
 	private List<INodeFactory> heads;
 	private List<INodeFactory> tails;
 	private int headLength;
@@ -31,7 +31,7 @@ public class GepFactory extends AbstractCandidateFactory<INode[]> implements IMu
 	
 	private int length;
 	
-	public GepFactory(List<INodeFactory> factories, int length) {		
+	public GeneFactory(List<INodeFactory> factories, int length) {		
 		int maxAirity = 0;
 		heads = new ArrayList<INodeFactory>();
 		tails = new ArrayList<INodeFactory>();

@@ -1,0 +1,33 @@
+if (sepalWidth <= 2.236124921630355) { 
+	if (petalLength <= 4.827358640736768) { 
+		Iris-versicolor
+	} else { 
+		Iris-virginica
+	}
+} else { 
+    if (sepalLength <= 6.0956297576347405) { 
+    	if (petalWidth <= 1.6382438460637552) { 
+    		if (petalWidth <= 0.6876236266363729) { 
+    			Iris-setosa
+			} else { 
+    			Iris-versicolor
+			}
+		} else { 
+    		if (sepalWidth <= 3.049244467496116) { 
+    			Iris-virginica
+			} else { 
+    			Iris-versicolor
+    		}
+		}
+	} else { 
+    	if (petalLength <= 5.060429860949242) { 
+    		if (petalWidth <= 1.766884331638058) { 
+    			Iris-versicolor
+			} else { 
+    			Iris-virginica
+			}
+		} else { 
+    		Iris-virginica
+		}
+	}
+}

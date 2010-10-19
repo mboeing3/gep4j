@@ -43,7 +43,7 @@ public class SimpleExpression {
 		a = new VariableTerminal("a");
 		factories.add(new SimpleNodeFactory(a));
 
-		GepFactory factory = new GepFactory(factories, 15);
+		GeneFactory factory = new GeneFactory(factories, 15);
 
 		List<EvolutionaryOperator<INode[]>> operators = new ArrayList<EvolutionaryOperator<INode[]>>();
 		operators.add(new MutationOperator<INode[]>(factory, new Probability(0.2d)));

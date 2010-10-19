@@ -21,7 +21,7 @@ import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.gep4j.GepFactory;
+import org.gep4j.GeneFactory;
 import org.gep4j.INode;
 import org.gep4j.INodeFactory;
 import org.gep4j.KarvaEvaluator;
@@ -89,7 +89,7 @@ public class NominalDecisionTreeExample {
 		factories.add(new SimpleNodeFactory(windy));
 		factories.add(new NominalTerminalFactory(new Object[] {"No", "Yes"}));
 
-		GepFactory factory = new GepFactory(factories, GENE_SIZE);
+		GeneFactory factory = new GeneFactory(factories, GENE_SIZE);
 
 		List<EvolutionaryOperator<INode[]>> operators = new ArrayList<EvolutionaryOperator<INode[]>>();
 		operators.add(new MutationOperator<INode[]>(factory, new Probability(0.2d)));
