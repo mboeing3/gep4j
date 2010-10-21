@@ -16,27 +16,40 @@
  */
 package org.gep4j;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.factories.AbstractCandidateFactory;
 
-public class GepFactory extends AbstractCandidateFactory<List<INode[]>> {
+public class GepFactory extends AbstractCandidateFactory<GepIndividual> implements IMutator<GepIndividual>, IRecombiner<GepIndividual> {
 	private List<GeneFactory> factories;
 	
-	public GepFactory(List<GeneFactory> factories) {
-		this.factories = factories;
-	}
-	
 	@Override
-	public List<INode[]> generateRandomCandidate(Random rng) {
-		List<INode[]> cand = new ArrayList<INode[]>();
-		
-		for (GeneFactory fact : factories) {
-			cand.add(fact.generateRandomCandidate(rng));
-		}
-		return cand;
+	public GepIndividual generateRandomCandidate(Random rng) {
+		return null;
+//		List<INode[]> cand = new ArrayList<INode[]>();
+//		
+//		for (GeneFactory fact : factories) {
+//			cand.add(fact.generateRandomCandidate(rng));
+//		}
+//		return cand;
 	}
 
+	@Override
+	public GepIndividual mutate(GepIndividual individual, Probability probability, Random rng) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<GepIndividual> recombine(List<GepIndividual> individual, Probability probability, Random rng) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void addFactory(GeneFactory adfFactory) {
+		// TODO Auto-generated method stub
+		
+	}
 }
