@@ -1,10 +1,25 @@
 package org.gep4j;
 
-public class GepIndividual {
+import java.util.ArrayList;
+import java.util.List;
 
-	public INode[] getGene(int gene) {
-		// TODO Auto-generated method stub
-		return null;
+public class GepIndividual {
+	List<INode[]> genes;
+	
+	public GepIndividual() {
+		genes = new ArrayList<INode[]>();
+	}
+	
+	public INode[] getGene(int index) {
+		return genes.get(index);
+	}
+
+	public int getGeneCount() {
+		return genes.size();
+	}
+
+	public void add(INode[] gene) {
+		genes.add(gene);
 	}
 
 }

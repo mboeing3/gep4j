@@ -76,4 +76,12 @@ public class KarvaEvaluator {
 		
 		processLevel(nodeEvals, nodes, currentNode);
 	}
+
+	public String print(GepIndividual ind) {
+		StringBuffer buf = new StringBuffer();
+		for (int i=0; i<ind.getGeneCount(); i++) {
+			
+		}
+		return buf.toString();
+	}
 }

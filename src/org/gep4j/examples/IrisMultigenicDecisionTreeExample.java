@@ -62,7 +62,7 @@ public class IrisMultigenicDecisionTreeExample {
 	private static final int PETAL_WIDTH	= 3;
 	private static final int CLASS	 		= 4;
 	final KarvaEvaluator karvaEvaluator = new KarvaEvaluator();
-	public INode[] bestIndividual=null;
+	public GepIndividual bestIndividual=null;
 	public TableModel data;
 	private ThreadLocal<Double> sepalLength;
 	private ThreadLocal<Double> sepalWidth;
@@ -95,7 +95,7 @@ public class IrisMultigenicDecisionTreeExample {
 		factories.add(new NominalTerminalFactory(new Object[] {"Iris-setosa", "Iris-versicolor", "Iris-virginica"}));
 
 		GeneFactory factory = new GeneFactory(factories, GENE_SIZE);
-//todo fix
+
 		List<INodeFactory> adfFactories = new ArrayList<INodeFactory>();
 		adfFactories.add(new SimpleNodeFactory(new Add()));
 		adfFactories.add(new SimpleNodeFactory(new Multiply()));
@@ -137,12 +137,9 @@ public class IrisMultigenicDecisionTreeExample {
 		EvolutionObserver<GepIndividual> observer = new EvolutionObserver<GepIndividual>() {
 			@Override
 			public void populationUpdate(PopulationData<? extends GepIndividual> data) {
-//				bestIndividual = data.getBestCandidate();
-//				double error = getError(bestIndividual);
-//				System.out.printf("Generation %d, error = %.16f, %s\n", 
-//								  data.getGenerationNumber(), 
-//								  error, 
-//								  karvaEvaluator.print(bestIndividual));
+				bestIndividual = data.getBestCandidate();
+				double error = getError(bestIndividual);
+				System.out.printf("Generation %d, error = %.16f, %s\n", data.getGenerationNumber(), error, karvaEvaluator.print(bestIndividual));
 			}
 
 		};
