@@ -21,12 +21,12 @@ import org.gep4j.NodeEvaluation;
 
 public class NominalNode implements INode {
 	private Object[] options;
-	private ThreadLocal<Object> value;
+	private ThreadLocal value;
 	private String name;
 	
-	public NominalNode(String name, Object[] options) {
+	public NominalNode(String name, Object[] options, ThreadLocal value) {
 		this.options = options;
-		value = new ThreadLocal<Object>();
+		this.value = value;
 		this.name = name;
 	}
 	
@@ -41,10 +41,6 @@ public class NominalNode implements INode {
 		throw new RuntimeException(String.format("Invalid value from %s, value = %s", name, v));
 	}
 
-	public void setValue(Object value) {
-		this.value.set(value);
-	}
-	
 	@Override
 	public int getAirity() {
 		return options.length;

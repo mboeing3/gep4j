@@ -43,20 +43,27 @@ import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
 public class MixedDecisionTreeExample {
-	
+	// total gene length
 	private static final int GENE_SIZE 	= 15;
+	
+	// columns of table model
 	private static final int OUTLOOK 	= 0;
 	private static final int TEMP 		= 1;
 	private static final int HUMIDITY 	= 2;
 	private static final int WINDY 		= 3;
 	private static final int PLAY	 	= 4;
-	final KarvaEvaluator karvaEvaluator = new KarvaEvaluator();
-	public INode[] bestIndividual=null;
-	DefaultTableModel data;
-	private NominalNode outlook;
+	
+	// karva expression (INode[] for this example) evaluator 
+	final KarvaEvaluator karvaEvaluator = new KarvaEvaluator();	
+	
+	// table to hold the sample data
+	private DefaultTableModel data;
+	
+	// variables 
+	private ThreadLocal<String> outlook;
+	private ThreadLocal<String> windy;
 	private ThreadLocal<Integer> tempurature;
 	private ThreadLocal<Integer> humidity;
-	private NominalNode windy;
 	
 	private void go() {
 		data = new DefaultTableModel(new Object[][]{
@@ -79,16 +86,16 @@ public class MixedDecisionTreeExample {
 		
 		List<INodeFactory> factories = new ArrayList<INodeFactory>();
 
-		outlook = new NominalNode("Outlook", new String[] {"sunny", "overcast", "rainy"});
+		outlook = new ThreadLocal<String>();
 		tempurature = new ThreadLocal<Integer>();
 		humidity = new ThreadLocal<Integer>();
-		windy = new NominalNode("Windy", new String[] {"false", "true"});
+		windy = new ThreadLocal<String>();
 		
 		 
-		factories.add(new SimpleNodeFactory(outlook));
+		factories.add(new SimpleNodeFactory(new NominalNode("Outlook", new String[] {"sunny", "overcast", "rainy"}, outlook)));
 		factories.add(new IntegerDecisionNodeFactory("tempurature", 63, 86, tempurature));
 		factories.add(new IntegerDecisionNodeFactory("humidity", 64, 96, humidity));
-		factories.add(new SimpleNodeFactory(windy));
+		factories.add(new SimpleNodeFactory(new NominalNode("Windy", new String[] {"false", "true"}, windy)));
 		factories.add(new NominalTerminalFactory(new Object[] {"No", "Yes"}));
 
 		GeneFactory factory = new GeneFactory(factories, GENE_SIZE);
@@ -117,7 +124,7 @@ public class MixedDecisionTreeExample {
 		EvolutionObserver<INode[]> observer = new EvolutionObserver<INode[]>() {
 			@Override
 			public void populationUpdate(PopulationData<? extends INode[]> data) {
-				bestIndividual = data.getBestCandidate();
+				INode[] bestIndividual = data.getBestCandidate();
 				double error = getError(bestIndividual);
 				System.out.printf("Generation %d, error = %.16f, %s\n", 
 								  data.getGenerationNumber(), 
@@ -133,13 +140,15 @@ public class MixedDecisionTreeExample {
 	private double getError(INode[] ind) {
 		double error = 0;
 		for (int i=0; i<data.getRowCount(); i++) {
-			outlook.setValue(data.getValueAt(i, OUTLOOK));
+			outlook.set(data.getValueAt(i, OUTLOOK).toString());
 			tempurature.set((Integer) data.getValueAt(i, TEMP));
 			humidity.set((Integer) data.getValueAt(i, HUMIDITY));
-			windy.setValue(data.getValueAt(i, WINDY));
+			windy.set(data.getValueAt(i, WINDY).toString());
 			String result = (String) karvaEvaluator.evaluate(ind);
 			error += result.equals(data.getValueAt(i, PLAY)) ? 0.0 : 1.0;
 		}
+		
+		// TODO implement length method
 		//int len= karvaEvaluator.length(ind);
 		//double lenError = len / GENE_SIZE;
 		double lenError = 0.0;
