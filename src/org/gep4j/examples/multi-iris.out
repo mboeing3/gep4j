@@ -1,0 +1,78 @@
+Generation 3925, error = 0.0000000000000000, 
+
+***** Gene 0 *****
+
+(sepalWidth / (5.915108402517955 - sepalLength))
+
+***** Gene 1 *****
+
+petalLength
+
+***** Gene 2 *****
+
+7.372398243776317
+
+***** Gene 3 *****
+
+petalLength
+
+***** Gene 4 *****
+
+petalLength
+
+***** Gene 5 *****
+
+sepalWidth
+
+***** Gene 6 *****
+
+petalLength
+
+***** Gene 7 *****
+
+if (petalWidth <= 0.701865452488579) { 
+    Iris-setosa
+} else { 
+    if (petalLength <= 4.917331679055637) { 
+    	if (petalLength <= -7.456744139767025) { 
+    		if (petalLength <= 5.394523564660524) { 
+    			if (sepalLength <= 6.122999486731862) { 
+    				Iris-setosa
+				} else { 
+    				Iris-virginica
+				}
+			} else { 
+    			if (petalWidth <= 0.3939951195473942) { 
+    				Iris-versicolor
+				} else { 
+    				Iris-setosa
+				}
+			}
+		} else { 
+    		if (petalWidth <= 1.6724143238053464) { 
+   				Iris-versicolor
+			} else { 
+	    		if (sepalWidth <= 3.151741736582512) { 
+	    			Iris-virginica
+				} else { 
+		    		Iris-versicolor
+				}
+			}
+		}
+	} else { 
+	    if (petalLength <= 5.023713291318587) { 
+	    	if (sepalWidth <= 2.543488071434724) { 
+	    		Iris-virginica
+			} else { 
+	    		Iris-versicolor
+			}
+		} else { 
+	    	if (adf0 <= -16.483517646835434) { 
+	    		Iris-versicolor
+			} else { 
+	    		Iris-virginica
+			}
+		}
+	}
+}
+

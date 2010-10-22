@@ -40,7 +40,7 @@ public class SimpleExpression {
 	final KarvaEvaluator karvaEvaluator = new KarvaEvaluator();
 	public INode[] bestIndividual=null;
 	double expected[];
-	VariableTerminal a;
+	ThreadLocal<Double> a;
 	
 	private void go() {
 		expected = new double[TRAINING_COUNT];
@@ -56,8 +56,9 @@ public class SimpleExpression {
 		factories.add(new SimpleNodeFactory(new Subtract()));
 		factories.add(new SimpleNodeFactory(new Divide()));
 		factories.add(new IntegerConstantFactory(-10, 10));
-		a = new VariableTerminal("a");
-		factories.add(new SimpleNodeFactory(a));
+		
+		a = new ThreadLocal<Double>();
+		factories.add(new SimpleNodeFactory(new VariableTerminal("a", a)));
 
 		GeneFactory factory = new GeneFactory(factories, 15);
 
@@ -102,7 +103,7 @@ public class SimpleExpression {
 	private double getError(INode[] ind) {
 		double error = 0;
 		for (int i=0; i<TRAINING_COUNT; i++) {
-			a.setValue((double) i);
+			a.set((double) i);
 			Double result = (Double) karvaEvaluator.evaluate(ind);
 			error += Math.abs(expected[i] - result);
 		}

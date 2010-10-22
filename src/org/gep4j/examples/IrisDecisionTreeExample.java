@@ -111,7 +111,7 @@ public class IrisDecisionTreeExample {
 
 		};
 		engine.addEvolutionObserver(observer);
-		engine.evolve(100, 1, new TargetFitness(.0001, false));
+		engine.evolve(200, 1, new TargetFitness(.0001, false));
 	}
 
 	private double getError(INode[] ind) {

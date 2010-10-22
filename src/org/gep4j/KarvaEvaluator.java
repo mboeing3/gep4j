@@ -80,7 +80,8 @@ public class KarvaEvaluator {
 	public String print(GepIndividual ind) {
 		StringBuffer buf = new StringBuffer();
 		for (int i=0; i<ind.getGeneCount(); i++) {
-			
+			buf.append(String.format("\n\n***** Gene %d *****\n\n", i));
+			buf.append(print(ind.getGene(i)));
 		}
 		return buf.toString();
 	}

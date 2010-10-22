@@ -20,23 +20,11 @@ public class VariableTerminal implements INode {
 	private String name;
 	private ThreadLocal<Double> value;
 	
-	public VariableTerminal() {
-		value = new ThreadLocal<Double>();
-	}
-	
-	public VariableTerminal(String name) {
-		this();
+	public VariableTerminal(String name, ThreadLocal<Double> value) {
 		this.name = name;
+		this.value = value;
 	}
 	
-	public Double getValue() {
-		return value.get();
-	}
-
-	public void setValue(Double value) {
-		this.value.set(value);
-	}
-
 	@Override
 	public Object evaluate(Object[] args) {
 		return value.get();

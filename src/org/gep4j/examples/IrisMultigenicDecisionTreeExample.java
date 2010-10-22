@@ -52,9 +52,9 @@ import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
 public class IrisMultigenicDecisionTreeExample {
 	
-	private static final int GENE_SIZE 		= 20;
-	private static final int ADF_GENE_SIZE 	= 8;
-	private static final int NUM_ADFS 	= 5;
+	private static final int GENE_SIZE 		= 30;
+	private static final int ADF_GENE_SIZE 	= 15;
+	private static final int NUM_ADFS 	= 7;
 	
 	private static final int SEPAL_LENGTH 	= 0;
 	private static final int SEPAL_WIDTH	= 1;
@@ -62,13 +62,13 @@ public class IrisMultigenicDecisionTreeExample {
 	private static final int PETAL_WIDTH	= 3;
 	private static final int CLASS	 		= 4;
 	final KarvaEvaluator karvaEvaluator = new KarvaEvaluator();
-	public GepIndividual bestIndividual=null;
+	public GepIndividual bestIndividual = null;
 	public TableModel data;
 	private ThreadLocal<Double> sepalLength;
 	private ThreadLocal<Double> sepalWidth;
 	private ThreadLocal<Double> petalLength;
 	private ThreadLocal<Double> petalWidth;
-	private VariableTerminal adf[] = new VariableTerminal[NUM_ADFS];
+	private List<ThreadLocal<Double>> adf;
 	
 	private void go() {
 		data =  FileUtil.loadToTableModel("sample-data/iris.csv", new Object[]{"sepalLength", "sepalWidth", "petalLength", "petalWidth", "Class"});
@@ -81,8 +81,9 @@ public class IrisMultigenicDecisionTreeExample {
 		sepalWidth = new ThreadLocal<Double>();
 		petalLength = new ThreadLocal<Double>();
 		petalWidth = new ThreadLocal<Double>();
+		adf = new ArrayList<ThreadLocal<Double>>();
 		for (int i=0; i<NUM_ADFS; i++) {
-			adf[i] = new VariableTerminal("adf" + i);
+			adf.add(new ThreadLocal<Double>());
 		}
 		
 		factories.add(new DoubleDecisionNodeFactory("sepalLength", 4.0, 8.0, sepalLength));
@@ -90,7 +91,7 @@ public class IrisMultigenicDecisionTreeExample {
 		factories.add(new DoubleDecisionNodeFactory("petalLength", .5, 7.5, petalLength));
 		factories.add(new DoubleDecisionNodeFactory("petalWidth", 0.0, 3.0, petalWidth));
 		for (int i=0; i<NUM_ADFS; i++) {
-			factories.add(new SimpleNodeFactory(adf[i]));
+			factories.add(new DoubleDecisionNodeFactory("adf" + i, -20.0, 20.0, adf.get(i)));
 		}
 		factories.add(new NominalTerminalFactory(new Object[] {"Iris-setosa", "Iris-versicolor", "Iris-virginica"}));
 
@@ -102,10 +103,10 @@ public class IrisMultigenicDecisionTreeExample {
 		adfFactories.add(new SimpleNodeFactory(new Subtract()));
 		adfFactories.add(new SimpleNodeFactory(new Divide()));
 		adfFactories.add(new DoubleConstantFactory(-10.0, 10.0));
-		adfFactories.add(new DoubleDecisionNodeFactory("sepalLength", 4.0, 8.0, sepalLength));
-		adfFactories.add(new DoubleDecisionNodeFactory("sepalWidth", 1.5, 5, sepalWidth));
-		adfFactories.add(new DoubleDecisionNodeFactory("petalLength", .5, 7.5, petalLength));
-		adfFactories.add(new DoubleDecisionNodeFactory("petalWidth", 0.0, 3.0, petalWidth));
+		adfFactories.add(new SimpleNodeFactory(new VariableTerminal("sepalLength", sepalLength)));
+		adfFactories.add(new SimpleNodeFactory(new VariableTerminal("sepalWidth", sepalWidth)));
+		adfFactories.add(new SimpleNodeFactory(new VariableTerminal("petalLength", petalLength)));
+		adfFactories.add(new SimpleNodeFactory(new VariableTerminal("petalWidth", petalWidth)));
 		GeneFactory adfFactory = new GeneFactory(adfFactories, ADF_GENE_SIZE);
 		
 		for (int i=0; i<NUM_ADFS; i++) {
@@ -115,7 +116,7 @@ public class IrisMultigenicDecisionTreeExample {
 		
 		List<EvolutionaryOperator<GepIndividual>> operators = new ArrayList<EvolutionaryOperator<GepIndividual>>();
 		operators.add(new MutationOperator<GepIndividual>(gepFactory, new Probability(0.05d)));
-		operators.add(new RecombinationOperator<GepIndividual>(gepFactory, new Probability(0.7d)));
+		operators.add(new RecombinationOperator<GepIndividual>(gepFactory, new Probability(0.2d)));
 		EvolutionaryOperator<GepIndividual> pipeline = new EvolutionPipeline<GepIndividual>(operators);
  
 		FitnessEvaluator<GepIndividual> evaluator = new FitnessEvaluator<GepIndividual>() {
@@ -144,7 +145,7 @@ public class IrisMultigenicDecisionTreeExample {
 
 		};
 		engine.addEvolutionObserver(observer);
-		engine.evolve(100, 1, new TargetFitness(.0001, false));
+		engine.evolve(200, 1, new TargetFitness(.0001, false));
 	}
 
 	private double getError(GepIndividual candidate) {
@@ -158,7 +159,7 @@ public class IrisMultigenicDecisionTreeExample {
 			for (; gene<NUM_ADFS; gene++) {
 				INode node[] = candidate.getGene(gene);
 				Double adfResult = (Double) karvaEvaluator.evaluate(node);
-				adf[i].setValue(adfResult);
+				adf.get(gene).set(adfResult);
 			}
 			INode node[] = candidate.getGene(gene);
 			String result = (String) karvaEvaluator.evaluate(node);
@@ -174,3 +175,112 @@ public class IrisMultigenicDecisionTreeExample {
 		new IrisMultigenicDecisionTreeExample().go();	
 	}
 }
+
+/*
+
+Generation 3925, error = 0.0000000000000000, 
+
+***** Gene 0 *****
+
+(sepalWidth / (5.915108402517955 - sepalLength))
+
+***** Gene 1 *****
+
+petalLength
+
+***** Gene 2 *****
+
+7.372398243776317
+
+***** Gene 3 *****
+
+petalLength
+
+***** Gene 4 *****
+
+petalLength
+
+***** Gene 5 *****
+
+sepalWidth
+
+***** Gene 6 *****
+
+petalLength
+
+***** Gene 7 *****
+
+if (petalWidth <= 0.701865452488579) { 
+    Iris-setosa
+}
+else { 
+    if (petalLength <= 4.917331679055637) { 
+    if (adf3 <= -7.456744139767025) { 
+    if (petalLength <= 5.394523564660524) { 
+    if (sepalLength <= 6.122999486731862) { 
+    Iris-setosa
+}
+else { 
+    Iris-virginica
+}
+
+}
+else { 
+    if (petalWidth <= 0.3939951195473942) { 
+    Iris-versicolor
+}
+else { 
+    Iris-setosa
+}
+
+}
+
+}
+else { 
+    if (petalWidth <= 1.6724143238053464) { 
+    if (adf0 <= 3.308855906280197) { 
+    Iris-versicolor
+}
+else { 
+    Iris-versicolor
+}
+
+}
+else { 
+    if (sepalWidth <= 3.151741736582512) { 
+    Iris-virginica
+}
+else { 
+    Iris-versicolor
+}
+
+}
+
+}
+
+}
+else { 
+    if (petalLength <= 5.023713291318587) { 
+    if (sepalWidth <= 2.543488071434724) { 
+    Iris-virginica
+}
+else { 
+    Iris-versicolor
+}
+
+}
+else { 
+    if (adf0 <= -16.483517646835434) { 
+    Iris-versicolor
+}
+else { 
+    Iris-virginica
+}
+
+}
+
+}
+
+}
+
+*/
