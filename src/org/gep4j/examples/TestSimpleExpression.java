@@ -1,4 +1,4 @@
-package org.gep4j;
+package org.gep4j.examples;
 
 
 import java.util.ArrayList;
@@ -16,8 +16,6 @@ import org.gep4j.math.Add;
 import org.gep4j.math.Divide;
 import org.gep4j.math.Multiply;
 import org.gep4j.math.Subtract;
-import org.junit.Assert;
-import org.junit.Test;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
 import org.uncommons.watchmaker.framework.EvolutionEngine;
@@ -34,8 +32,7 @@ public class TestSimpleExpression {
 	final KarvaEvaluator karvaEvaluator = new KarvaEvaluator();
 	public INode[] bestIndividual=null;
 
-	@Test
-	public void testPI() {
+	public void go() {
 		List<INodeFactory> factories = new ArrayList<INodeFactory>();
 
 		factories.add(new SimpleNodeFactory(new Add()));
@@ -80,7 +77,9 @@ public class TestSimpleExpression {
 		};
 		engine.addEvolutionObserver(observer);
 		engine.evolve(1000, 1, new TargetFitness(.0001, false));
-		Assert.assertTrue(Math.abs(Math.PI - (Double)karvaEvaluator.evaluate(bestIndividual)) < .0001);
-//		engine.evolve(2000, 1, new GenerationCount(1000));
+	}
+	
+	public static final void main(String args[]) {
+		new TestSimpleExpression().go();
 	}
 }
